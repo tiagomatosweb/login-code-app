@@ -24,7 +24,16 @@
 <script setup>
 import { ref } from 'vue'
 import { array, object, string } from 'yup'
+import { authAPI } from '../api/auth'
+import { useAuth } from '../composables/useAuth'
+import { useRouter } from 'vue-router'
 
+const props = defineProps({
+  email: {
+    type: String,
+    required: true,
+  }
+})
 const errorMessage = ref(null)
 
 const schema = object({
@@ -41,8 +50,18 @@ const fields = [
   },
 ]
 
+const {user} = useAuth()
+const router = useRouter()
+
 const onSubmit = async ({ data }) => {
-  console.log(data);
+  try {
+    const code = data.code.join('')
+    const response = await authAPI.verifyLoginCode(props.email, code)
+    user.value = response.data
+    await router.push('/')
+  } catch(e) {
+    errorMessage.value = e.message
+  }
 }
 </script>
 

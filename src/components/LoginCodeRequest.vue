@@ -13,7 +13,9 @@
 
 <script setup>
 import { object, string } from 'yup'
+import {authAPI} from '../api/auth.js'
 
+const emit = defineEmits(['code-sent'])
 const schema = object({
   email: string().email().required().label('E-mail'),
 })
@@ -28,7 +30,8 @@ const fields = [
 ]
 
 const onSubmit = async ({ data }) => {
-  console.log(data);
+  await authAPI.requestLoginCode(data.email)
+  emit('code-sent', data.email)
 }
 </script>
 

@@ -3,7 +3,7 @@ import { authAPI } from '../api/auth.js'
 
 const user = ref(null)
 
-export function useAuth() {
+export const useAuth = () => {
   const isAuthenticated = computed(() => !!user.value)
 
   const fetchUser = async () => {
